@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subject Analytics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h2 {
+            color: #3498db;
+            margin: 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-back {
+            background-color: #95a5a6;
+            margin-right: 10px;
+        }
+        
+        .btn-back:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .filter-form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .filter-form input, .filter-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .analytics-card {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .analytics-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-box {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .present-stat {
+            color: #2ecc71;
+        }
+        
+        .absent-stat {
+            color: #e74c3c;
+        }
+        
+        .late-stat {
+            color: #f39c12;
+        }
+        
+        .progress-container {
+            margin-top: 15px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .progress-type {
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-value {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-present {
+            background-color: #2ecc71;
+        }
+        
+        .progress-absent {
+            background-color: #e74c3c;
+        }
+        
+        .progress-late {
+            background-color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Attendance Analytics</h2>
+            <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
+        </div>
+        
+        <div class="card">
+            <div class="filter-form">
+                <form method="get">
+                    <label for="date_from">From:</label>
+                    <input type="date" id="date_from" name="date_from" value="{{ date_from }}">
+                    
+                    <label for="date_to">To:</label>
+                    <input type="date" id="date_to" name="date_to" value="{{ date_to }}">
+                    
+                    <button type="submit" class="btn">Apply Filter</button>
+                </form>
+            </div>
+            
+            <h3>Attendance Statistics ({{ date_from }} to {{ date_to }})</h3>
+            
+            {% for stat in subject_stats %}
+            <div class="analytics-card">
+                <div class="analytics-header">
+                    <div class="analytics-title">{{ stat.subject.name }}</div>
+                    <div>Total Records: {{ stat.total }}</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value present-stat">{{ stat.present }}</div>
+                        <div class="stat-label">Present</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-value absent-stat">{{ stat.absent }}</div>
+                        <div class="stat-label">Absent</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-value late-stat">{{ stat.late }}</div>
+                        <div class="stat-label">Late</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <div class="progress-type">Present</div>
+                        <div>{{ stat.present_rate|floatformat:1 }}%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-value progress-present" style="width: {{ stat.present_rate }}%"></div>
+                    </div>
+                    
+                    <div class="progress-label">
+                        <div class="progress-type">Absent</div>
+                        <div>{{ stat.absent_rate|floatformat:1 }}%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-value progress-absent" style="width: {{ stat.absent_rate }}%"></div>
+                    </div>
+                    
+                    <div class="progress-label">
+                        <div class="progress-type">Late</div>
+                        <div>{{ stat.late_rate|floatformat:1 }}%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-value progress-late" style="width: {{ stat.late_rate }}%"></div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No attendance data found for the selected period.</p>
+            {% endfor %}
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <a href="{% url 'export_subject_attendance' %}?date_from={{ date_from }}&date_to={{ date_to }}" class="btn">Export Data</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

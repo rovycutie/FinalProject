@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Attendance System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h2 {
+            color: #3498db;
+            margin: 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .nav-links {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+        }
+        
+        .nav-links a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .messages {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-info {
+            margin-bottom: 20px;
+        }
+        
+        .status-info p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .subject-list {
+            margin-top: 20px;
+        }
+        
+        .subject-card {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subject-name {
+            font-weight: 500;
+        }
+        
+        .subject-status {
+            font-style: italic;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #3498db;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .stats-container {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .stats-card {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stats-title {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .stats-label {
+            color: #666;
+        }
+        
+        .stats-value {
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .progress-value {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-present {
+            background-color: #2ecc71;
+        }
+        
+        .progress-absent {
+            background-color: #e74c3c;
+        }
+        
+        .progress-late {
+            background-color: #f39c12;
+        }
+        
+        .notes-field {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 80px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome, {{ request.user.username }}</h2>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <h3>Today's Attendance ({{ today|date:"F d, Y" }})</h3>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('general', event)">General</div>
+                <div class="tab" onclick="showTab('subjects', event)">Subjects</div>
+                <div class="tab" onclick="showTab('stats', event)">Stats</div>
+            </div>
+            
+            <div id="general-tab" class="tab-content">
+                <div class="status-info">
+                    {% if today_attendance %}
+                        <p><strong>Status:</strong> {{ today_attendance.status|title }}</p>
+                        <p><strong>Time In:</strong> {{ today_attendance.time_in|time:"H:i:s" }}</p>
+                        
+                        {% if today_attendance.time_out %}
+                            <p><strong>Time Out:</strong> {{ today_attendance.time_out|time:"H:i:s" }}</p>
+                            <p>Your attendance has been fully recorded for today.</p>
+                        {% else %}
+                            <p>You haven't marked your time out yet.</p>
+                            <form action="{% url 'mark_attendance' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn">Mark Time Out</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p>You haven't marked your attendance for today.</p>
+                        <form action="{% url 'mark_attendance' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">Mark Attendance</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div id="subjects-tab" class="tab-content" style="display: none;">
+                <div class="form-group">
+                    <form action="{% url 'mark_subject_attendance' %}" method="post">
+                        {% csrf_token %}
+                        <label for="subject">Select Subject:</label>
+                        <select name="subject" id="subject" class="form-control" required>
+                            <option value="">-- Select Subject --</option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.id }}">{{ subject.name }}</option>
+                            {% endfor %}
+                        </select>
+                        
+                        <label for="period">Class Period (Optional):</label>
+                        <select name="period" id="period" class="form-control">
+                            <option value="">-- Select Period (Optional) --</option>
+                            {% for period in periods %}
+                                <option value="{{ period.id }}">
+                                    {{ period.name }} ({{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}, {{ period.days_of_week }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        
+                        <label for="status">Attendance Status:</label>
+                        <select name="status" id="status" class="form-control" required>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                            <option value="late">Late</option>
+                        </select>
+                        
+                        <label for="notes">Notes (Optional):</label>
+                        <textarea name="notes" id="notes" class="notes-field" placeholder="Add any notes about this attendance record"></textarea>
+                        
+                        <button type="submit" class="btn">Mark Attendance</button>
+                    </form>
+                </div>
+                
+                <div class="subject-list">
+                    <h4>Today's Subject Attendance:</h4>
+                    {% if subject_attendances %}
+                        {% for attendance in subject_attendances %}
+                            <div class="subject-card">
+                                <div class="subject-name">{{ attendance.subject.name }}
+                                    {% if attendance.period %}
+                                    <br><small>{{ attendance.period.name }} ({{ attendance.period.start_time|time:"H:i" }} - {{ attendance.period.end_time|time:"H:i" }})</small>
+                                    {% endif %}
+                                </div>
+                                <div class="subject-status">Status: {{ attendance.status|title }}</div>
+                                <div class="subject-time">{{ attendance.created_at|time:"H:i:s" }}</div>
+                            </div>
+                            
+                            {% if attendance.notes %}
+                            <div style="padding: 0 15px 15px; margin-top: -10px; font-style: italic; color: #666;">
+                                <strong>Notes:</strong> {{ attendance.notes }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No subject attendance recorded today.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div id="stats-tab" class="tab-content" style="display: none;">
+                <h4>Your Attendance Statistics</h4>
+                
+                <div class="stats-container">
+                    {% for stat in subject_stats %}
+                    <div class="stats-card">
+                        <div class="stats-header">
+                            <div class="stats-title">{{ stat.subject.name }}</div>
+                            <div>{{ stat.stats.total }} records</div>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stats-label">Present:</div>
+                            <div class="stats-value">{{ stat.stats.present }} ({{ stat.stats.present_rate|floatformat:1 }}%)</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-value progress-present" style="width: {{ stat.stats.present_rate }}%"></div>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stats-label">Absent:</div>
+                            <div class="stats-value">{{ stat.stats.absent }} ({{ stat.stats.absent_rate|floatformat:1 }}%)</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-value progress-absent" style="width: {{ stat.stats.absent_rate }}%"></div>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stats-label">Late:</div>
+                            <div class="stats-value">{{ stat.stats.late }} ({{ stat.stats.late_rate|floatformat:1 }}%)</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-value progress-late" style="width: {{ stat.stats.late_rate }}%"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No attendance statistics available.</p>
+                    {% endfor %}
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <a href="{% url 'subject_analytics' %}" class="btn">View Detailed Analytics</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{% url 'attendance_history' %}">View Attendance History</a>
+            <a href="{% url 'subject_attendance_history' %}">Subject Attendance History</a>
+            <a href="{% url 'export_subject_attendance' %}">Export Attendance Data</a>
+            {% if request.user.is_staff %}
+            <a href="{% url 'admin_attendance_view' %}">Admin Attendance View</a>
+            <a href="{% url 'admin_subject_attendance' %}">Admin Subject View</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Set clicked tab as active
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Add subject-specific period filtering
+        document.getElementById('subject').addEventListener('change', function() {
+            const subjectId = this.value;
+            const periodSelect = document.getElementById('period');
+            
+            // First clear all options
+            periodSelect.innerHTML = '<option value="">-- Select Period (Optional) --</option>';
+            
+            if (!subjectId) return;
+            
+            // Get periods for this subject
+            const periods = [
+                {% for period in periods %}
+                {
+                    id: "{{ period.id }}",
+                    subject_id: "{{ period.subject.id }}",
+                    name: "{{ period.name }}",
+                    start_time: "{{ period.start_time|time:'H:i' }}",
+                    end_time: "{{ period.end_time|time:'H:i' }}",
+                    days_of_week: "{{ period.days_of_week }}"
+                },
+                {% endfor %}
+            ];
+            
+            // Add filtered options
+            const filteredPeriods = periods.filter(p => p.subject_id === subjectId);
+            filteredPeriods.forEach(period => {
+                const option = document.createElement('option');
+                option.value = period.id;
+                option.textContent = `${period.name} (${period.start_time} - ${period.end_time}, ${period.days_of_week})`;
+                periodSelect.appendChild(option);
+            });
+        });
+    </script>
+</body>
+</html>
